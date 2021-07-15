@@ -185,4 +185,34 @@ background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
   }
 }
 
+/* sticky footer */
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background-color: #423F3E;
+}
+
+.mid-content {
+  /* text-align: center; */
+  min-height: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  /* margin-bottom: -50px; */
+}
+
 /* other ejs files style */
+
+/* admin page styles */
+
+.admin-button-area button {
+  /* text-align: center; */
+  margin: 10px;
+  width: 300px;
+}

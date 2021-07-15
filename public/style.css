@@ -3,9 +3,10 @@
 @import url('https://fonts.googleapis.com/css?family=Numans');
 
 html,body{
-background-image: url('/front\ bg.jpg');
+background-image: url('images/front\ bg.jpg');
 background-size: cover;
 background-repeat: no-repeat;
+/* background-color: #423F3E !important; */
 height: 100%;
 font-family: 'Numans', sans-serif;
 }

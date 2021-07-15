@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({extended: true}))
 // express session code (must be here before linking database):
 
 app.use(session({
-    secret: "our little secret.",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
     // cookie: { secure: true }
@@ -61,6 +61,10 @@ mongoose.connect('mongodb://localhost:27017/dsaDB', {useNewUrlParser: true, useU
 const userSchema = new mongoose.Schema({
     username: String,
     password: String,
+    isAdmin: {
+        type: Boolean,
+        default: false
+    }
     //TODO: add -> lists: [listSchema]
 })
 
@@ -81,6 +85,23 @@ passport.use(User.createStrategy())
 passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
 
+// TODO: (improve admin creation and management code!)
+
+ User.countDocuments({},(e,c)=>{
+    if(!e){
+        if(!c){
+            User.register({username: process.env.ADMIN_USERNAME, isAdmin: true},process.env.ADMIN_PASSWORD, (e,user)=>{
+                if(e){
+                    console.log(e);
+                    res.redirect("/signup")
+                }
+            })
+        }
+    } else {
+        console.log(e)
+    }
+})
+
 // handling get requests
 
 app.get("/",(req,res)=>{
@@ -98,6 +119,19 @@ app.get("/signup",(req,res)=>{
 app.get("/lists",(req,res)=>{
     if(req.isAuthenticated()){
         res.render("lists")
+    } else {
+        console.log("not authenticated");
+        res.redirect("/login")
+    }
+})
+
+app.get("/admin",(req,res)=>{
+    if(req.isAuthenticated()){
+        if(req.user.isAdmin){
+            res.render("admin")
+        } else {
+            res.render("lists")
+        }
     } else {
         console.log("not authenticated");
         res.redirect("/login")
@@ -139,15 +173,16 @@ app.post("/signup",(req,res)=>{
     })
 })
 
+// log-out:
+
+app.get("/logout",(req,res)=>{
+    req.logout()
+    res.redirect("/")
+})
+
 // server management
 
 app.listen(3000,()=>{
     console.log("server up and running at port 3000")
 })
 
-// log-out:
-
-// app.get("/logout",(req,res)=>{
-//     req.logout()
-//     res.redirect("/")
-// })
