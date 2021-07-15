@@ -3,13 +3,14 @@
 /* .navbar-container-fluid{
   max-width: 900px;
 } */
-/* .navbar-brand{
-    margin-left: 110px;
-} */
 
-/* .nav-item{
-    padding-right: 110px;
-} */
+.navbar-brand{
+    margin-left: 7%;
+}
+
+nav ul{
+  margin-right: 7%;
+}
 
 .bg-custom-1 {
 background-color: #85144b;
@@ -215,4 +216,24 @@ body {
   /* text-align: center; */
   margin: 10px;
   width: 300px;
+}
+
+/* admin add lists and quests styles */
+
+.forms-area {
+  width: 80%;
+}
+
+.form-fields {
+  padding: 10px;
+}
+
+.form-fields h1 {
+  color: white;
+}
+
+/* lists.ejks styles */
+
+.list-items {
+  display: block !important;
 }

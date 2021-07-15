@@ -1,0 +1,37 @@
+<%- include('partials/header') %> 
+
+  <div class="forms-area">
+    <div class="form-group form-fields"><h1>Add Question</h1></div>
+    <form action="/admin-create-quests" method="POST">
+        <div class="form-group form-fields">
+            <input type="text" name="topic" class="form-control" id="exampleFormControlInput1" placeholder="Question Topic">
+        </div>
+        <div class="form-group form-fields">
+          <input type="text" name="name" class="form-control" id="exampleFormControlInput1" placeholder="Question Name">
+        </div>
+        <div class="form-group form-fields">
+          <input type="text" name="url" class="form-control" id="exampleFormControlInput1" placeholder="Question Url">
+        </div>
+  
+        <div class="form-group form-fields">
+          
+            <select class="form-control" name="list" id="exampleFormControlSelect1"> <!-- add to list -->
+
+                <% if (allLists.length === 0) { %>
+                    <option value=""> no lists present </option>
+                <% } else { %>
+                    <% allLists.forEach(item=>{ %>
+                        <option value="<%=item.listName%>"> <%=item.listName%> </option>
+                    <% }) %>
+                <% } %>
+
+          </select>
+        </div>
+  
+        <div class="form-fields">
+          <button type="submit" class="btn btn-warning mb-2">Add Quest</button>
+        </div>
+      </form>
+  </div>
+
+<%- include('partials/footer') %> 

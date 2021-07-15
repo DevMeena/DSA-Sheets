@@ -1,5 +1,9 @@
 <%- include('partials/header') %> 
 
-<h1>hello world</h1>
+    <% allLists.forEach(item=>{ %>
+    <div class="list-items">
+        <h1><%=item.listName%></h1>
+    </div>
+    <% }) %>
 
 <%- include('partials/footer') %> 

@@ -37,26 +37,27 @@ app.use(passport.session())
 
 // linking database
 
-mongoose.connect('mongodb://localhost:27017/dsaDB', {useNewUrlParser: true, useUnifiedTopology: true});
-// mongoose.set("useCreateIndex", true) // avoids deprication warning (its causing issues so disabled it)
+mongoose.connect('mongodb://localhost:27017/dsaDB', {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.set("useCreateIndex", true) // ! avoids deprication warning (it was causing issues earlier if any issue found please disable it)
 
-// creating a mongoose schema
+// creating a mongoose schemas
 
-// const questionSchema = new mongoose.Schema({
-//     topic: String,
-//     name: String,
-//     url: String,
-//     solved: Boolean
-// })
+const questionSchema = new mongoose.Schema({
+    topic: { type : String , required : true },
+    name: { type : String , unique : true, required : true },
+    url: { type : String , required : true },
+    listid: { type : String , required : true }, 
+    solved: { type: Boolean, default: false }
+})
 
-// const listSchema = new mongoose.Schema({
-//     listName: String,
-//     aboutList: String,
-//     questionSet: [questionSchema],
-//     totalQuestions: Number,
-//     solvedQuestions: Number
-//     //TODO: listRating
-// })
+const listSchema = new mongoose.Schema({
+    listName: { type : String , unique : true, required : true },
+    aboutList: { type : String , required : true },
+    // questionSet: [questionSchema], // ! probably not needed
+    totalQuestions: Number,
+    //TODO: solvedQuestions: Number
+    //TODO: listRating: Number
+})
 
 const userSchema = new mongoose.Schema({
     username: String,
@@ -74,6 +75,8 @@ userSchema.plugin(passportLocalMongoose)
 
 // creating a mongoose model
 
+const Quest = new mongoose.model("Quest",questionSchema)
+const List = new mongoose.model("List",listSchema)
 const User = new mongoose.model("User",userSchema)
 
 // passport local config:
@@ -118,7 +121,7 @@ app.get("/signup",(req,res)=>{
 
 app.get("/lists",(req,res)=>{
     if(req.isAuthenticated()){
-        res.render("lists")
+        List.find({},(e,foundLists)=>{res.render("lists",{allLists: foundLists})})
     } else {
         console.log("not authenticated");
         res.redirect("/login")
@@ -129,6 +132,33 @@ app.get("/admin",(req,res)=>{
     if(req.isAuthenticated()){
         if(req.user.isAdmin){
             res.render("admin")
+        } else {
+            res.redirect("/lists")
+        }
+    } else {
+        console.log("not authenticated");
+        res.redirect("/login")
+    }
+})
+
+app.get("/admin-create-lists",(req,res)=>{
+    if(req.isAuthenticated()){
+        if(req.user.isAdmin){
+            res.render("admin-create-lists")
+        } else {
+            res.render("lists")
+        }
+    } else {
+        console.log("not authenticated");
+        res.redirect("/login")
+    }
+})
+
+app.get("/admin-create-quests",(req,res)=>{
+
+    if(req.isAuthenticated()){
+        if(req.user.isAdmin){
+            List.find({},(e,foundLists)=>{res.render("admin-create-quests",{allLists: foundLists})})
         } else {
             res.render("lists")
         }
@@ -169,6 +199,45 @@ app.post("/signup",(req,res)=>{
             passport.authenticate("local")(req,res,()=>{
                 res.redirect("/lists")
             })
+        }
+    })
+})
+
+app.post("/admin-create-lists",(req,res)=>{
+
+    const list = new List({
+        listName: req.body.listTitle,
+        aboutList: req.body.listDescription
+    })
+
+    list.save((e)=>{
+        if(e){
+            console.log(e)
+            res.redirect("/admin-create-lists")
+        } else {
+            res.redirect("/admin-create-lists")
+        }
+    })
+
+})
+
+app.post("/admin-create-quests",(req,res)=>{
+
+    
+
+    const quest = new Quest({
+        topic: req.body.topic,
+        name: req.body.name,
+        url: req.body.url,
+        listid: req.body.list
+    })
+
+    quest.save((e)=>{
+        if(e){
+            console.log(e)
+            res.redirect("/admin-create-quests")
+        } else {
+            res.redirect("/admin-create-quests")
         }
     })
 })
