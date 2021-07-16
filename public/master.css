@@ -244,3 +244,48 @@ body {
   color: white;
   padding-left: 5px;
 }
+
+/* lists ejs styles */
+
+/* .mid-content {
+  max-width: 800px;
+} */
+
+.list-card {
+  background-color: transparent;
+  max-width: 1000px;
+  margin: 5%;
+}
+
+.list-card h3{
+  color: white;
+}
+
+.button-container {
+  text-align: center;
+  padding: 0px;
+}
+
+.inner-button-container{
+  display: inline-block;
+  width: 100%;
+}
+
+.card-row {
+  margin: 2%;
+}
+
+.card-body-container {
+  padding: 20px;
+}
+
+.card-body-container p {
+  color: white;
+}
+
+.button-container button{
+  display: block;
+  width: 100%;
+  margin-top: 3%;
+  margin-bottom: 3%;
+}
