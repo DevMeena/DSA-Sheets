@@ -1,13 +1,10 @@
-<%- include('partials/header') %> 
+<%- include('partials/header') %>
 
+    <div>
     <% allLists.forEach(item=>{ %>
-    <div class="list-items">
-        <h1><%=item.listName%></h1>
-    </div>
-    <% }) %>
 
     <div class="card list-card border-warning mb-3">
-        <div class="card-header"><h3> Love Babbar's DSA Cracker Sheet </h3></div>
+        <div class="card-header"><h3> <%=item.listName%> </h3></div>
         <div class="container-fluid card-body-outer-container">
           <div class="row card-row">
             <div class="card-body card-body-container text-warning col-md-8">
@@ -24,5 +21,8 @@
           </div>
         </div>
       </div>
+
+      <% }) %>
+    </div>
 
 <%- include('partials/footer') %> 

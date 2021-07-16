@@ -203,6 +203,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  /* text-align: center; */
   margin-top: 50px;
   margin-bottom: 50px;
   /* margin-bottom: -50px; */
@@ -234,9 +235,9 @@ body {
 
 /* lists.ejks styles */
 
-.list-items {
+/* .list-items {
   display: block !important;
-}
+} */
 
 /* form styles */
 
