@@ -237,3 +237,8 @@ body {
 .list-items {
   display: block !important;
 }
+
+.form-fields label {
+  color: white;
+  padding-left: 5px;
+}

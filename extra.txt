@@ -1,0 +1,157 @@
+<div class="form-group form-fields">
+          
+          <select class="form-control" name="list" id="exampleFormControlSelect1"> <!-- add to list -->
+              <option value=""> Select a List </option>
+              <% if (allLists.length > 0) { %>
+                  <% allLists.forEach(item=>{ %>
+                      <option value="<%=item.listName%>"> <%=item.listName%> </option>
+                  <% }) %>
+              <% } %>
+  
+        </select>
+      </div>
+
+
+
+
+
+
+const questOG = {name: req.body.quest}
+    var editList = {}
+    let update = true;
+    if(req.body.quest === "")
+    {
+        update = false;
+        res.redirect("/admin-edit-quest")
+    }
+    else if(req.body.name === "" && req.body.list === "" && req.body.topic === "" && req.body.url === "")
+    {
+        update = false;
+        res.redirect("/admin-edit-quest")
+    }
+    else
+    {
+        // ! Refactor this code
+
+        if(req.body.name !== "" && req.body.list !== "" && req.body.topic !== "" && req.body.url !== "")
+        {
+            editList = {
+                name: req.body.name, 
+                listid: req.body.list,
+                topic: req.body.topic,
+                url: req.body.url
+            }
+        }
+        else if(req.body.name !== "" && req.body.list !== "" && req.body.topic !== "" && req.body.url === "")
+        {
+            editList = {
+                name: req.body.name, 
+                listid: req.body.list,
+                topic: req.body.topic
+            }
+        }
+        else if(req.body.name !== "" && req.body.list !== "" && req.body.topic === "" && req.body.url === "")
+        {
+            editList = {
+                name: req.body.name, 
+                listid: req.body.list
+            }
+        }
+        else if(req.body.name !== "" && req.body.list === "" && req.body.topic === "" && req.body.url === "")
+        {
+            editList = {
+                name: req.body.name
+            }
+        }
+        else if(req.body.name === "" && req.body.list === "" && req.body.topic === "" && req.body.url !== "")
+        {
+            editList = {
+                url: req.body.url
+            }
+        }
+        else if(req.body.name === "" && req.body.list === "" && req.body.topic !== "" && req.body.url !== "")
+        {
+            editList = {
+                topic: req.body.topic,
+                url: req.body.url
+            }
+        }
+        else if(req.body.name === "" && req.body.list !== "" && req.body.topic !== "" && req.body.url !== "")
+        {
+            editList = {
+                listid: req.body.list,
+                topic: req.body.topic,
+                url: req.body.url
+            }
+        }
+        
+    }
+    
+    if(update)
+    {
+
+        Quest.findOneAndUpdate(questOG,editList,(e)=>{
+            if(e){
+                console.log(e)
+            } else {
+                console.log("edit saved");
+                res.redirect("/admin-edit-quest")
+            }
+        })
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    if(req.isAuthenticated()){
+        if(req.user.isAdmin){
+            Quest.find({},(e,foundQuests)=>{
+                List.find({},(err,foundLists)=>{
+                    res.render("admin-edit-quest",{allQuests: foundQuests, allLists: foundLists}) 
+                })
+            })
+        } else {
+            res.render("lists")
+        }
+    } else {
+        console.log("not authenticated");
+        res.redirect("/login")
+    }
+
+
+
+
+
+
+
+    <div class="form-group form-fields">
+            <input type="text" name="topic" class="form-control" id="exampleFormControlInput1" placeholder="Question Topic">
+        </div>
+        <div class="form-group form-fields">
+          <input type="text" name="name" class="form-control" id="exampleFormControlInput1" placeholder="Question Name">
+        </div>
+        <div class="form-group form-fields">
+          <input type="text" name="url" class="form-control" id="exampleFormControlInput1" placeholder="Question Url">
+        </div>
+        
+        <div class="form-group form-fields">
+          
+            <select class="form-control" name="list" id="exampleFormControlSelect1"> <!-- add to list -->
+                <option value=""> Select a List </option>
+                <% if (allLists.length) { %>
+                    <% allLists.forEach(item=>{ %>
+                        <option value="<%=item.listName%>"> <%=item.listName%> </option>
+                    <% }) %>
+                <% } %>
+    
+          </select>
+        </div>

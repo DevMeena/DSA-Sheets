@@ -1,0 +1,30 @@
+<%- include('partials/header') %> 
+
+<div class="forms-area">
+  <div class="form-group form-fields"> <h1>Edit List</h1> </div>
+  <form action="/admin-edit-list" method="POST">
+    <div class="form-group form-fields">
+          
+        <select class="form-control" name="list" id="exampleFormControlSelect1"> <!-- add to list -->
+            <option value=""> Select a List </option>
+            <% if (allLists.length > 0) { %>
+                <% allLists.forEach(item=>{ %>
+                    <option value="<%=item.listName%>"> <%=item.listName%> </option>
+                <% }) %>
+            <% } %>
+
+      </select>
+    </div>
+      <div class="form-group form-fields">
+        <input type="text" class="form-control" name="listTitle" id="exampleFormControlInput1" placeholder="List's New Name">
+      </div>
+      <div class="form-group form-fields">
+        <textarea class="form-control" id="exampleFormControlTextarea1" name="listDescription" placeholder="About this list" rows="5"></textarea>
+      </div>
+      <div class="form-fields">
+        <button type="submit" class="btn btn-primary mb-2">Confirm Edit</button>
+      </div>
+    </form>
+</div>
+
+<%- include('partials/footer') %> 

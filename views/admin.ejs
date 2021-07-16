@@ -3,10 +3,12 @@
   <div class="admin-button-area">
     <div class="admin-buttons"><button type="button" onclick="location.href='/admin-create-lists'" class="btn btn-outline-warning">Add New List</button></div>
     <div class="admin-buttons"><button type="button" onclick="location.href='/admin-create-quests'" class="btn btn-outline-warning">Add New Question</button></div>
-    <div class="admin-buttons"><button type="button" class="btn btn-outline-warning">Edit List</button></div>
-    <div class="admin-buttons"><button type="button" class="btn btn-outline-warning">Edit Question</button></div>
-    <div class="admin-buttons"><button type="button" class="btn btn-outline-warning">Remove List</button></div>
-    <div class="admin-buttons"><button type="button" class="btn btn-outline-warning">Remove Question</button></div>
+    <div class="admin-buttons"><button type="button" onclick="location.href='/admin-edit-list'" class="btn btn-outline-warning">Edit List</button></div>
+    <div class="admin-buttons"><button type="button" onclick="location.href='/admin-edit-quest'" class="btn btn-outline-warning">Edit Question</button></div>
+    <div class="admin-buttons"><button type="button" onclick="location.href='/admin-delete-list'" class="btn btn-outline-warning">Remove List</button></div>
+    <div class="admin-buttons"><button type="button" onclick="location.href='/admin-delete-quest'" class="btn btn-outline-warning">Remove Question</button></div>
   </div>
+
+  <!-- Can change button colors to success, primary and danger if you wish to -->
 
 <%- include('partials/footer') %> 

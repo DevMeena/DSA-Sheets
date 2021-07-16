@@ -1,0 +1,32 @@
+<%- include('partials/header') %> 
+
+<div class="forms-area">
+  <div class="form-group form-fields"> <h1>Delete List</h1> </div>
+  <form action="/admin-delete-list" method="POST">
+    <div class="form-group form-fields">
+      
+      <select class="form-control" required name="list" id="exampleFormControlSelect1"> <!-- add to list -->
+            <option value=""> Select a List </option>
+            <% if (allLists.length > 0) { %>
+                <% allLists.forEach(item=>{ %>
+                    <option value="<%=item._id%>"> <%=item.listName%> </option>
+                <% }) %>
+            <% } %>
+
+      </select>
+    </div>
+
+      <div class="form-fields">
+        <input class="form-check-input" required type="checkbox" value="" id="flexCheckDefault">
+        <label class="form-check-label" for="flexCheckDefault">
+          Confirm Delete
+        </label>
+      </div>
+
+      <div class="form-fields">
+        <button type="submit" class="btn btn-danger mb-2">Delete</button>
+      </div>
+    </form>
+</div>
+
+<%- include('partials/footer') %> 

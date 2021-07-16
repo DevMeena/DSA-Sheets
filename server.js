@@ -168,6 +168,93 @@ app.get("/admin-create-quests",(req,res)=>{
     }
 })
 
+app.get("/admin-edit-list",(req,res)=>{
+    if(req.isAuthenticated()){
+        if(req.user.isAdmin){
+            List.find({},(e,foundLists)=>{res.render("admin-edit-list",{allLists: foundLists})})
+        } else {
+            res.render("lists")
+        }
+    } else {
+        console.log("not authenticated");
+        res.redirect("/login")
+    }
+})
+
+app.get("/admin-edit-list",(req,res)=>{
+    if(req.isAuthenticated()){
+        if(req.user.isAdmin){
+            List.find({},(e,foundLists)=>{res.render("admin-edit-list",{allLists: foundLists})})
+        } else {
+            res.render("lists")
+        }
+    } else {
+        console.log("not authenticated");
+        res.redirect("/login")
+    }
+})
+
+app.get("/admin-edit-quest",(req,res)=>{
+    if(req.isAuthenticated()){
+        if(req.user.isAdmin){
+            Quest.find({},(e,foundLists)=>{res.render("admin-edit-quest",{allQuests: foundLists})})
+        } else {
+            res.render("lists")
+        }
+    } else {
+        console.log("not authenticated");
+        res.redirect("/login")
+    }
+})
+
+app.get("/admin-edit-quest/:questID",(req,res)=>{
+    if(req.isAuthenticated()){
+        if(req.user.isAdmin){
+            List.find({},(e,foundLists)=>{res.render("admin-edit-quest-QuestID",{urlParameters: req.params.questID, allLists: foundLists})})
+        } else {
+            res.render("lists")
+        }
+    } else {
+        console.log("not authenticated");
+        res.redirect("/login")
+    }
+})
+
+app.get("/admin-delete-list",(req,res)=>{
+    if(req.isAuthenticated()){
+        if(req.user.isAdmin){
+            List.find({},(e,foundLists)=>{res.render("admin-delete-list",{allLists: foundLists})})
+        } else {
+            res.render("lists")
+        }
+    } else {
+        console.log("not authenticated");
+        res.redirect("/login")
+    }
+})
+
+app.get("/admin-delete-quest",(req,res)=>{
+    if(req.isAuthenticated()){
+        if(req.user.isAdmin){
+            Quest.find({},(e,foundLists)=>{res.render("admin-delete-quest",{allQuests: foundLists})})
+        } else {
+            res.render("lists")
+        }
+    } else {
+        console.log("not authenticated");
+        res.redirect("/login")
+    }
+})
+
+app.get("/change-password",(req,res)=>{
+    if(req.isAuthenticated()){
+        res.render("change-password")
+    } else {
+        console.log("not authenticated")
+        res.redirect("/login")
+    }
+})
+
 // handling post requests
 
 app.post("/login",(req,res)=>{
@@ -223,8 +310,6 @@ app.post("/admin-create-lists",(req,res)=>{
 
 app.post("/admin-create-quests",(req,res)=>{
 
-    
-
     const quest = new Quest({
         topic: req.body.topic,
         name: req.body.name,
@@ -239,6 +324,145 @@ app.post("/admin-create-quests",(req,res)=>{
         } else {
             res.redirect("/admin-create-quests")
         }
+    })
+})
+
+app.post("/admin-edit-list",(req,res)=>{
+    const listName = {listName: req.body.list}
+    var editList = {}
+    let update = true;
+    let updateQuests = false;
+
+    // ! Refactor this code
+
+
+    if(req.body.listTitle === "" && req.body.listDescription === "")
+    {
+        update = false;
+        res.redirect("/admin-edit-list")
+    }
+    else if(req.body.listTitle.length > 0 && req.body.listDescription === "")
+    {   
+        updateQuests = true
+        editList = {
+            listName: req.body.listTitle
+        }
+    }
+    else if(req.body.listTitle === "" && req.body.listDescription.length > 0)
+    {
+        editList = {
+            aboutList: req.body.listDescription
+        }
+    }
+    else
+    {
+        updateQuests = true
+        editList = {
+            listName: req.body.listTitle,
+            aboutList: req.body.listDescription
+        }
+    }
+
+    if(update)
+    {
+        List.findOneAndUpdate(listName,editList,{overwrite: false},(e)=>{
+            if(e){
+                console.log(e)
+            } else {
+
+                if(updateQuests){
+                    Quest.updateMany({listid: req.body.list}, 
+                        {listid: req.body.listTitle}, (err, docs) => {
+                        if (err){
+                            console.log(err)
+                        }
+                        else{
+                            console.log("Updated Docs : ", docs)
+                        }
+                    });
+                }
+
+                console.log("edit saved");
+                res.redirect("/admin-edit-list")
+            }
+        })
+    }
+})
+
+app.post("/admin-edit-quest",(req,res)=>{
+    const questID = req.body.quest
+    if(questID.length)
+    {
+        res.redirect("/admin-edit-quest/:" + questID)
+    }
+    else
+    {
+        res.redirect("/admin-edit-quest")
+    }
+})
+
+app.post("/admin-edit-quest/:questID",(req,res)=>{
+    
+    var qID = req.params.questID
+    qID = qID.substring(1)
+    
+    // ! not working properly
+    Quest.findOneAndUpdate({_id: qID},{$set: req.body},{new: true, useFindAndModify: false},(e)=>{
+        if(!e){
+            
+            console.log("update successful")
+            res.redirect("/admin-edit-quest")
+        } else {
+            console.log(e)
+            res.redirect("/admin-edit-quest")
+        }
+    })
+})
+
+app.post("/admin-delete-list",(req,res)=>{
+    const id = req.body.list
+    List.findByIdAndDelete(id,(err,list)=>{
+        if (err){
+            console.log(err)
+        } else {
+            Quest.deleteMany({ listid: list.listName}).then(()=>{
+                console.log("Data deleted");
+            }).catch((error)=>{
+                console.log(error)
+            })
+            console.log("deleted " + list)
+            res.redirect("/admin-delete-list")
+        }
+    })
+})
+
+app.post("/admin-delete-quest",(req,res)=>{
+    const id = req.body.quest
+    Quest.findByIdAndDelete(id,(err,quest)=>{
+        if (err){
+            console.log(err)
+        } else {
+            console.log("deleted " + quest)
+            res.redirect("/admin-delete-quest")
+        }
+    })
+})
+
+app.post("/change-password",(req,res)=>{
+
+    User.findByUsername(req.body.name).then((sanitizedUser)=>{
+        if (sanitizedUser){
+            sanitizedUser.setPassword(req.body.newpwd, (e)=>{
+                sanitizedUser.save()
+                console.log("password change successful");
+                res.redirect("/change-password")
+            })
+        } else {
+            console.log(e)
+            res.redirect("/change-password")
+        }
+    },(err)=>{
+        console.error(err)
     })
 })
 

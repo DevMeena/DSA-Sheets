@@ -1,0 +1,33 @@
+<%- include('partials/header') %> 
+
+<div class="forms-area">
+    <div class="form-group form-fields"><h1>Delete Question</h1></div>
+    <form action="/admin-delete-quest" method="POST">
+        <!-- question select -->
+        <div class="form-group form-fields">
+          
+            <select class="form-control" name="quest" id="exampleFormControlSelect1" required> <!-- add to list -->
+                <option value=""> Select a Quest </option>
+                <% if (allQuests.length > 0) { %>
+                    <% allQuests.forEach(item=>{ %>
+                        <option value="<%=item._id%>"> <%=item.name%> (<%=item.listid%>) </option>
+                    <% }) %>
+                <% } %>
+    
+            </select>
+        </div>
+
+          <div class="form-fields">
+            <input class="form-check-input" required type="checkbox" value="" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+              Confirm Delete
+            </label>
+          </div>
+  
+        <div class="form-fields">
+          <button type="submit" class="btn btn-danger mb-2">Delete</button>
+        </div>
+      </form>
+  </div>
+
+<%- include('partials/footer') %> 

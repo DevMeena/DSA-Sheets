@@ -15,21 +15,19 @@
   
         <div class="form-group form-fields">
           
-            <select class="form-control" name="list" id="exampleFormControlSelect1"> <!-- add to list -->
-
-                <% if (allLists.length === 0) { %>
-                    <option value=""> no lists present </option>
-                <% } else { %>
-                    <% allLists.forEach(item=>{ %>
-                        <option value="<%=item.listName%>"> <%=item.listName%> </option>
-                    <% }) %>
-                <% } %>
-
-          </select>
-        </div>
+          <select class="form-control" name="list" id="exampleFormControlSelect1"> <!-- add to list -->
+              <option value=""> Select a List </option>
+              <% if (allLists.length > 0) { %>
+                  <% allLists.forEach(item=>{ %>
+                      <option value="<%=item.listName%>"> <%=item.listName%> </option>
+                  <% }) %>
+              <% } %>
+  
+        </select>
+      </div>
   
         <div class="form-fields">
-          <button type="submit" class="btn btn-warning mb-2">Add Quest</button>
+          <button type="submit" class="btn btn-success mb-2">Add Quest</button>
         </div>
       </form>
   </div>
