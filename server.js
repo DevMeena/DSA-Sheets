@@ -405,9 +405,20 @@ app.post("/admin-edit-quest/:questID",(req,res)=>{
     
     var qID = req.params.questID
     qID = qID.substring(1)
-    
-    // ! not working properly
-    
+
+    function clean(obj) {
+        for (var propName in obj) {
+          if (obj[propName] === "" || obj[propName] === undefined || obj[propName] === null) {
+            delete obj[propName];
+          }
+        }
+        return obj
+    }
+
+    var questDetails = req.body
+    console.log(questDetails);
+    console.log(clean(questDetails));
+
     Quest.findOneAndUpdate({_id: qID},{$set: req.body},{new: true, useFindAndModify: false},(e)=>{
         if(!e){
             
