@@ -48,7 +48,6 @@ const questionSchema = new mongoose.Schema({
     topic: { type : String , required : true },
     name: { type : String , unique : false, required : true },
     url: { type : String , required : true },
-    // listid: { type : String , required : true }, //! removing it cuz its making things weird
     solved: { type: Boolean, default: false }
 })
 

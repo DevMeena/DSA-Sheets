@@ -1,0 +1,8 @@
+* uniqueness in questions and lists! currently its creating multiple similar questions set and questions with same name in same list
+* improve admin creation
+* improve list editing code 
+* improve question editing code its currently removing all the fields not provided by the form
+* add alerts on front end whenever something goes wrong
+* remove unwanted comments and console.logs
+* add other pages and functionality
+* bind lists/questionSet Schema with Users
