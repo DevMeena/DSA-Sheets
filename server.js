@@ -42,20 +42,22 @@ mongoose.set("useCreateIndex", true) // ! avoids deprication warning (it was cau
 
 // creating a mongoose schemas
 
+// TODO: when empty list is created twice it gives error same for question fixed for now by setting name's in question schema unique values to false but its leading to multiple same entries
+
 const questionSchema = new mongoose.Schema({
     topic: { type : String , required : true },
-    name: { type : String , unique : true, required : true },
+    name: { type : String , unique : false, required : true },
     url: { type : String , required : true },
-    listid: { type : String , required : true }, 
+    // listid: { type : String , required : true }, //! removing it cuz its making things weird
     solved: { type: Boolean, default: false }
 })
 
 const listSchema = new mongoose.Schema({
     listName: { type : String , unique : true, required : true },
     aboutList: { type : String , required : true },
-    // questionSet: [questionSchema], // ! probably not needed
+    questionSet: { type : [questionSchema] , unique : true },
     totalQuestions: Number,
-    //TODO: solvedQuestions: Number
+    solvedQuestions: Number
     //TODO: listRating: Number
 })
 
@@ -195,9 +197,10 @@ app.get("/admin-edit-list",(req,res)=>{
 })
 
 app.get("/admin-edit-quest",(req,res)=>{
+
     if(req.isAuthenticated()){
         if(req.user.isAdmin){
-            Quest.find({},(e,foundLists)=>{res.render("admin-edit-quest",{allQuests: foundLists})})
+            List.find({},(e,foundLists)=>{res.render("admin-edit-quest",{allLists: foundLists})})
         } else {
             res.render("lists")
         }
@@ -207,10 +210,46 @@ app.get("/admin-edit-quest",(req,res)=>{
     }
 })
 
-app.get("/admin-edit-quest/:questID",(req,res)=>{
+app.get("/admin-edit-quest/:listID",(req,res)=>{
+    
+    let listId = req.params.listID
+    listId = listId.substring(1)
+
     if(req.isAuthenticated()){
         if(req.user.isAdmin){
-            List.find({},(e,foundLists)=>{res.render("admin-edit-quest-QuestID",{urlParameters: req.params.questID, allLists: foundLists})})
+            List.findOne(
+                {_id: listId}
+            )
+            .populate("questionSet")
+            .exec(
+                (e,foundlist)=>{
+                    if(e){
+                        console.log(e);
+                        res.redirect("/admin-edit-quest")
+                    } else {
+                        res.render("admin-edit-quest-listID",{urlParameters: listId, allQuests: foundlist.questionSet})
+                    }
+                }
+            )
+        } else {
+            res.render("lists")
+        }
+    } else {
+        console.log("not authenticated");
+        res.redirect("/login")
+    }
+})
+
+app.get("/admin-edit-quest/:listID/:questID",(req,res)=>{
+    
+    let listId = req.params.listID
+    listId = listId.substring(1)
+    let questId = req.params.questID
+    questId = questId.substring(1)
+
+    if(req.isAuthenticated()){
+        if(req.user.isAdmin){
+            res.render("admin-edit-quest-questID",{urlParameters: listId, questUrlParameters: questId})
         } else {
             res.render("lists")
         }
@@ -236,7 +275,35 @@ app.get("/admin-delete-list",(req,res)=>{
 app.get("/admin-delete-quest",(req,res)=>{
     if(req.isAuthenticated()){
         if(req.user.isAdmin){
-            Quest.find({},(e,foundLists)=>{res.render("admin-delete-quest",{allQuests: foundLists})})
+            List.find({},(e,foundLists)=>{res.render("admin-delete-quest",{allLists: foundLists})})
+        } else {
+            res.render("lists")
+        }
+    } else {
+        console.log("not authenticated");
+        res.redirect("/login")
+    }
+})
+
+app.get("/admin-delete-quest/:listID",(req,res)=>{
+    let listId = req.params.listID
+    listId = listId.substr(1)
+    if(req.isAuthenticated()){
+        if(req.user.isAdmin){
+            List.findOne(
+                {_id: listId}
+            )
+            .populate("questionSet")
+            .exec(
+                (e,foundlist)=>{
+                    if(e){
+                        console.log(e);
+                        res.redirect("/admin-delete-quest")
+                    } else {
+                        res.render("admin-delete-quest-List",{listID: listId, allQuests: foundlist.questionSet})
+                    }
+                }
+            )
         } else {
             res.render("lists")
         }
@@ -269,7 +336,7 @@ app.post("/login",(req,res)=>{
             console.log(e)
             res.redirect("/login")
         } else {
-            passport.authenticate("local")(req,res,()=>{
+                passport.authenticate("local")(req,res,()=>{
                 res.redirect("/lists")
             })
         }
@@ -283,7 +350,7 @@ app.post("/signup",(req,res)=>{
             console.log(e);
             res.redirect("/signup")
         } else {
-            passport.authenticate("local")(req,res,()=>{
+                passport.authenticate("local")(req,res,()=>{
                 res.redirect("/lists")
             })
         }
@@ -300,6 +367,7 @@ app.post("/admin-create-lists",(req,res)=>{
     list.save((e)=>{
         if(e){
             console.log(e)
+            console.log(req.body.listTitle);
             res.redirect("/admin-create-lists")
         } else {
             res.redirect("/admin-create-lists")
@@ -314,27 +382,31 @@ app.post("/admin-create-quests",(req,res)=>{
         topic: req.body.topic,
         name: req.body.name,
         url: req.body.url,
-        listid: req.body.list
     })
 
-    quest.save((e)=>{
-        if(e){
-            console.log(e)
-            res.redirect("/admin-create-quests")
-        } else {
-            res.redirect("/admin-create-quests")
-        }
+    const addQuestionTo = req.body.list
+
+    List.findOne({listName: addQuestionTo}, (e,foundList)=>{
+        foundList.questionSet.push(quest)
+        foundList.save((e)=>{
+            if(e){
+                console.log(e)
+                res.redirect("/admin-create-quests")
+            } else {
+                console.log("question added to list")
+                res.redirect("/admin-create-quests")
+            }
+        })
     })
+
 })
 
 app.post("/admin-edit-list",(req,res)=>{
     const listName = {listName: req.body.list}
     var editList = {}
     let update = true;
-    let updateQuests = false;
 
     // ! Refactor this code
-
 
     if(req.body.listTitle === "" && req.body.listDescription === "")
     {
@@ -365,24 +437,12 @@ app.post("/admin-edit-list",(req,res)=>{
 
     if(update)
     {
-        List.findOneAndUpdate(listName,editList,{overwrite: false},(e)=>{
+        List.findOneAndUpdate(listName,editList,{overwrite: false, useFindAndModify: false},(e,list)=>{
             if(e){
                 console.log(e)
+                res.redirect("/admin-edit-list")
             } else {
-
-                if(updateQuests){
-                    Quest.updateMany({listid: req.body.list}, 
-                        {listid: req.body.listTitle}, (err, docs) => {
-                        if (err){
-                            console.log(err)
-                        }
-                        else{
-                            console.log("Updated Docs : ", docs)
-                        }
-                    });
-                }
-
-                console.log("edit saved");
+                console.log("edit saved")
                 res.redirect("/admin-edit-list")
             }
         })
@@ -390,10 +450,10 @@ app.post("/admin-edit-list",(req,res)=>{
 })
 
 app.post("/admin-edit-quest",(req,res)=>{
-    const questID = req.body.quest
-    if(questID.length)
+    const listId = req.body.listID
+    if(listId.length)
     {
-        res.redirect("/admin-edit-quest/:" + questID)
+        res.redirect("/admin-edit-quest/:" + listId)
     }
     else
     {
@@ -401,10 +461,24 @@ app.post("/admin-edit-quest",(req,res)=>{
     }
 })
 
-app.post("/admin-edit-quest/:questID",(req,res)=>{
+app.post("/admin-edit-quest/:listID",(req,res)=>{
     
-    var qID = req.params.questID
-    qID = qID.substring(1)
+    let list_ID = req.params.listID
+    list_ID = list_ID.substring(1)
+
+    const questId = req.body.quest
+    
+    if(list_ID.length){
+        res.redirect("/admin-edit-quest/:" + list_ID + "/:" + questId)
+    } else {
+        res.redirect("/admin-edit-quest")
+    }
+})
+
+app.post("/admin-edit-quest/:listID/:questID",(req,res)=>{
+    
+    // let list_ID = req.params.listID
+    let questId = req.params.questID
 
     function clean(obj) {
         for (var propName in obj) {
@@ -416,48 +490,76 @@ app.post("/admin-edit-quest/:questID",(req,res)=>{
     }
 
     var questDetails = req.body
-    console.log(questDetails);
-    console.log(clean(questDetails));
+    // console.log(questDetails);
+    clean(questDetails)
+    // console.log(questId);
+    // console.log(req.body);
 
-    Quest.findOneAndUpdate({_id: qID},{$set: req.body},{new: true, useFindAndModify: false},(e)=>{
-        if(!e){
-            
-            console.log("update successful")
-            res.redirect("/admin-edit-quest")
-        } else {
-            console.log(e)
-            res.redirect("/admin-edit-quest")
+    // TODO: fix this code and update only fields provided by the form
+
+    List.updateOne(
+        {"questionSet._id": questId},
+        {
+            $set: {
+                "questionSet.$": req.body
+            }
+        },
+        {new: true, useFindAndModify: false},
+        (e)=>{
+            if(e){
+                console.log(e);
+                res.redirect("/admin-edit-quest")
+            } else {
+                res.redirect("/admin-edit-quest")
+            }
         }
-    })
+    )
 })
 
 app.post("/admin-delete-list",(req,res)=>{
+    
     const id = req.body.list
+
     List.findByIdAndDelete(id,(err,list)=>{
         if (err){
             console.log(err)
+            res.redirect("/admin-delete-list")
         } else {
-            Quest.deleteMany({ listid: list.listName}).then(()=>{
-                console.log("Data deleted");
-            }).catch((error)=>{
-                console.log(error)
-            })
-            console.log("deleted " + list)
+            // console.log("deleted " + list)
             res.redirect("/admin-delete-list")
         }
     })
 })
 
 app.post("/admin-delete-quest",(req,res)=>{
-    const id = req.body.quest
-    Quest.findByIdAndDelete(id,(err,quest)=>{
-        if (err){
-            console.log(err)
-        } else {
-            console.log("deleted " + quest)
-            res.redirect("/admin-delete-quest")
-        }
-    })
+
+    const list_ID = req.body.listID
+    
+    if(list_ID.length){
+        res.redirect("/admin-delete-quest/:" + list_ID)
+    } else {
+        res.redirect("/admin-delete-quest")
+    }
+})
+
+app.post("/admin-delete-quest/:listID",(req,res)=>{
+    let id = req.params.listID
+    id = id.substr(1)
+    const list_id = mongoose.Types.ObjectId(mongoose.Types.ObjectId(id))
+
+    List.findByIdAndUpdate({_id: list_id},{
+        $pull: { questionSet: {_id: req.body.quest}}
+        },
+        {useFindAndModify: false},
+        (e)=>{
+            if(e){
+                console.log(e);
+                res.redirect("/admin-delete-quest")
+            } else {
+                // console.log("question deleted");
+                res.redirect("/admin-delete-quest")
+            }
+        })
 })
 
 app.post("/change-password",(req,res)=>{

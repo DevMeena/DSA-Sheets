@@ -1,26 +1,26 @@
 <%- include('partials/header') %> 
 
 <div class="forms-area">
-    <div class="form-group form-fields"><h1>Edit Question</h1></div>
+    <div class="form-group form-fields"><h1>Select List</h1></div>
     <form action="/admin-edit-quest" method="POST">
         <!-- question select -->
         <div class="form-group form-fields">
           
-            <select class="form-control" name="quest" id="exampleFormControlSelect1" required> <!-- add to list -->
-                <option value=""> Select a Quest </option>
-                <% if (allQuests.length > 0) { %>
-                    <% allQuests.forEach(item=>{ %>
-                        <option value="<%=item._id%>"> <%=item.name%> </option>
-                    <% }) %>
-                <% } %>
-    
-          </select>
-        </div>
+          <select class="form-control" name="listID" id="exampleFormControlSelect1"> <!-- add to list -->
+              <option value=""> Select a List </option>
+              <% if (allLists.length > 0) { %>
+                  <% allLists.forEach(item=>{ %>
+                      <option value="<%=item._id%>"> <%=item.listName%> </option>
+                  <% }) %>
+              <% } %>
+  
+        </select>
+      </div>
 
         
   
         <div class="form-fields">
-          <button type="submit" class="btn btn-primary mb-2">Select Question</button>
+          <button type="submit" class="btn btn-primary mb-2">Select</button>
         </div>
       </form>
   </div>

@@ -258,8 +258,25 @@ body {
   margin: 5%;
 }
 
-.list-card h3{
+.list-card h3 {
   color: white;
+}
+
+.page-heading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-heading-container h1 {
+  color: goldenrod;
+  padding: 5px;
+  padding-left: 50px;
+  padding-right: 50px;
+  background-color: transparent;
+  border: 3px solid goldenrod;
+  text-shadow: 2px 2px #2b2b2b;
+  border-radius: 3px;
 }
 
 .button-container {

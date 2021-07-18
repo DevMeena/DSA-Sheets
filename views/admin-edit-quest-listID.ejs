@@ -1,0 +1,27 @@
+<%- include('partials/header') %> 
+
+<div class="forms-area">
+    <div class="form-group form-fields"><h1>Select Question</h1></div>
+    <form action="/admin-edit-quest/<%=urlParameters%>" method="POST">
+        <!-- question select -->
+
+        <div class="form-group form-fields">
+          
+          <select class="form-control" name="quest" id="exampleFormControlSelect1" required> <!-- add to list -->
+              <option value=""> Select a Quest </option>
+              <% if (allQuests.length > 0) { %>
+                  <% allQuests.forEach(item=>{ %>
+                      <option value="<%=item._id%>"> <%=item.name%> </option>
+                  <% }) %>
+              <% } %>
+  
+        </select>
+      </div>
+  
+        <div class="form-fields">
+          <button type="submit" class="btn btn-primary mb-2">Select</button>
+        </div>
+      </form>
+  </div>
+
+<%- include('partials/footer') %>

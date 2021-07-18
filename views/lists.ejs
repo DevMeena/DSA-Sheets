@@ -1,6 +1,11 @@
 <%- include('partials/header') %>
 
     <div>
+
+      <div class="page-heading-container">
+        <h1>All Lists</h1>
+      </div>
+
     <% allLists.forEach(item=>{ %>
 
     <div class="card list-card border-warning mb-3">
@@ -9,7 +14,8 @@
           <div class="row card-row">
             <div class="card-body card-body-container text-warning col-md-8">
               <h5 class="card-title"> Solved: 0 / 450</h5>
-              <p class="card-text"> Love Babbar DSA Cracker Sheet containing 450 Questions related to Data structures and Algorithms. This sheet is proven to be very helpful for many students and has helped them crack many coding rounds and interviews  </p>
+              <p class="card-text"> <%=item.aboutList%>  </p>
+              <!-- Love Babbar DSA Cracker Sheet containing 450 Questions related to Data structures and Algorithms. This sheet is proven to be very helpful for many students and has helped them crack many coding rounds and interviews -->
             </div>
             <div class="button-container col-md-4">
               <div class="inner-button-container">
