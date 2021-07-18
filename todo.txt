@@ -2,6 +2,7 @@
 * improve admin creation
 * improve list editing code 
 * improve question editing code its currently removing all the fields not provided by the form
+* improve list display currently if all the lists have short about text it only covers 20% of the screen 
 * add alerts on front end whenever something goes wrong
 * remove unwanted comments and console.logs
 * add other pages and functionality

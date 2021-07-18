@@ -279,6 +279,10 @@ body {
   border-radius: 3px;
 }
 
+/* .card-body-outer-container {
+  
+} */
+
 .button-container {
   text-align: center;
   padding: 0px;
@@ -293,8 +297,13 @@ body {
   margin: 2%;
 }
 
+.card-body-text-inner-container{
+  width: 100%;
+}
+
 .card-body-container {
   padding: 20px;
+  /* width: 100%; */
 }
 
 .card-body-container p {
