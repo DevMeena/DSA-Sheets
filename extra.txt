@@ -200,3 +200,372 @@ const questOG = {name: req.body.quest}
     
             </select>
         </div>
+
+
+
+
+
+
+
+
+        <div class="left-quest">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+        </div>
+        <div class="mid-quest">
+            <a href="<%= item.url %>"><%= item.name %></a>
+        </div>
+        <div class="right-quest">
+            <input class="star" type="checkbox" title="bookmark page" checked>
+        </div>
+
+
+
+                        <!-- <div class="rate">
+                  <input type="radio" id="star5" name="rate" value="5" />
+                  <label for="star5" title="text">5 stars</label>
+                  <input type="radio" id="star4" name="rate" value="4" />
+                  <label for="star4" title="text">4 stars</label>
+                  <input type="radio" id="star3" name="rate" value="3" />
+                  <label for="star3" title="text">3 stars</label>
+                  <input type="radio" id="star2" name="rate" value="2" />
+                  <label for="star2" title="text">2 stars</label>
+                  <input type="radio" id="star1" name="rate" value="1" />
+                  <label for="star1" title="text">1 star</label>
+                </div> -->
+
+
+                <a href="<%= item.url %>"><%= item.name %></a>
+
+
+
+                
+    <% allLists.forEach(item=>{ %>
+
+    
+    <div class="container-fluid quest-box">
+        
+        <div class="row">
+            <div class="col-md-1 checkbox-outer-div">
+            <div class="checkbox-area">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            </div>
+            </div>
+
+            <div class="col-md-10 quest-outer-div">
+                <div class="mid-quest">
+                    <div> <%= item.name %> </div>
+                </div>
+            </div>
+
+            <div class="col-md-1 fav-outer-div">
+            <input class="star" type="checkbox" title="bookmark page" checked>
+            </div>
+        </div>
+    </div>
+
+    <% }) %>
+
+
+
+
+
+    <!-- if(solved) checkbox checked text color green
+            else this normal -->
+            <!-- unsolved -->
+            <!-- if(userList.find(element => element === item._id))
+            {
+
+            } -->
+
+
+
+
+
+
+
+            <div class="forms-area-question">
+        <form action="/admin-edit-quest" method="POST">
+
+  <div class="form-group form-fields">     
+    <select class="form-control" name="optionID" id="exampleFormControlSelect1">
+        <option value=""> Select an Option </option>
+        <% if (options.length > 0) { %>
+            <% options.forEach(item=>{ %>
+                <option value="<%=item%>"> <%=item%> </option>
+            <% }) %>
+        <% } %>
+
+  </select>
+</div>
+
+    <div class="form-group form-fields">     
+      <select class="form-control" name="topicID" id="exampleFormControlSelect1">
+          <option value=""> Select a Topic </option>
+          <% if (allTopics.length > 0) { %>
+              <% allTopics.forEach(item=>{ %>
+                  <option value="<%=item.topicName%>"> <%=item.topicName%> </option>
+              <% }) %>
+          <% } %>
+
+    </select>
+  </div>
+
+  <div class="form-fields questions-button">
+    <button type="submit" class="btn btn-success mb-2">Filter</button>
+    <button class="btn btn-danger mb-2"> Show Favourites </button>
+  </div>
+
+  </form>
+  </div>
+
+
+
+
+
+
+
+<% if (userList.includes(item._id)) { %>
+            
+    <% if (favList.includes(item._id)) { %>
+      <tr>
+        <form action="/unsolve" method="POST">
+          <th scope="row"> <input class="form-check-input checkbox-solved" type="checkbox" name="checkboxSolved" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </th>
+        </form>
+        <td> <a href="<%= item.url %>" style="color: gold;" ><%= item.name %></a> </td>
+        <form action="/unfavourite" method="POST">
+          <td> <input class="form-check-input checkbox-favourite" name="checkboxFavourite" type="checkbox" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </td>
+        </form>
+      </tr>
+    <% } else {%>
+      <tr>
+        <form action="/unsolve" method="POST">
+          <th scope="row"> <input class="form-check-input checkbox-solved" type="checkbox" name="checkboxSolved" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </th>
+        </form>
+        <td> <a href="<%= item.url %>" style="color: gold;" ><%= item.name %></a> </td>
+        <form action="/favourite" method="POST">
+          <td> <input class="form-check-input checkbox-unfavourite" name="checkboxFavourite" type="checkbox" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </td>
+        </form>
+      </tr>
+    <% } %>
+
+    <% } else { %>
+      <% if (favList.includes(item._id)) { %>
+        <tr>
+          <form action="/solve" method="POST">
+            <th scope="row"> <input class="form-check-input checkbox-unsolved" type="checkbox" name="checkboxSolved" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault" > </th>
+          </form>
+          <td> <a href="<%= item.url %>"><%= item.name %></a> </td>
+          <form action="/unfavourite" method="POST">
+            <td> <input class="form-check-input checkbox-favourite" name="checkboxFavourite" type="checkbox" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </td>
+          </form>
+        </tr>
+        <% } else {%>
+          <tr>
+            <form action="/solve" method="POST">
+              <th scope="row"> <input class="form-check-input checkbox-unsolved" type="checkbox" name="checkboxSolved" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault" > </th>
+            </form>
+            <td> <a href="<%= item.url %>"><%= item.name %></a> </td>
+            <form action="/favourite" method="POST">
+              <td> <input class="form-check-input checkbox-unfavourite" name="checkboxFavourite" type="checkbox" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </td>
+            </form>
+          </tr>
+          <% } %>
+      
+      <% } %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<% } else { %>
+
+            
+          <% allLists.forEach(item=>{ %>
+
+            
+            <% if (!(userList.includes(item._id))) { %>
+              <% continue %> 
+              <% } %> 
+              
+              <%- include('partials/showlistby') %>
+
+
+
+
+
+
+
+
+
+
+          <%- include('partials/showlistby') %>
+
+
+
+
+
+
+
+
+
+              <% if (showFilters === "all") { %> <!--  all -->
+          <% allLists.forEach(item=>{ %>
+            <%- include('partials/showlistby') %>
+
+          <% }) %>
+          <% } else if(showFilters === "solved") { %> <!--  solved -->
+
+          <% allLists.forEach(item=>{ %>
+          
+            <% if (userList.includes(item._id)) { %>
+                <% continue %> 
+            <% } %> 
+
+            <%- include('partials/showlistby') %>
+          
+          
+          <% }) %>
+          <% } else if(showFilters === "unsolved") { %> <!--  unsolved -->
+
+          <% allLists.forEach(item=>{ %>
+
+            
+            <% if (!(userList.includes(item._id))) { %>
+              <% continue %> 
+              <% } %> 
+              
+              <%- include('partials/showlistby') %>
+            
+
+          <% }) %>
+          
+          <% } %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <% if (topicFilters !== "all" && item.topic === topicFilters) {%> 
+
+            <% if (userList.includes(item._id)) { %>
+            
+              <% if (favList.includes(item._id)) { %>
+                <tr>
+                  <form action="/unsolve" method="POST">
+                    <th scope="row"> <input class="form-check-input checkbox-solved" type="checkbox" name="checkboxSolved" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </th>
+                  </form>
+                  <td> <a href="<%= item.url %>" style="color: gold;" ><%= item.name %></a> </td>
+                  <form action="/unfavourite" method="POST">
+                    <td> <input class="form-check-input checkbox-favourite" name="checkboxFavourite" type="checkbox" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </td>
+                  </form>
+                </tr>
+              <% } else {%>
+                <tr>
+                  <form action="/unsolve" method="POST">
+                    <th scope="row"> <input class="form-check-input checkbox-solved" type="checkbox" name="checkboxSolved" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </th>
+                  </form>
+                  <td> <a href="<%= item.url %>" style="color: gold;" ><%= item.name %></a> </td>
+                  <form action="/favourite" method="POST">
+                    <td> <input class="form-check-input checkbox-unfavourite" name="checkboxFavourite" type="checkbox" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </td>
+                  </form>
+                </tr>
+              <% } %>
+          
+              <% } else { %>
+                <% if (favList.includes(item._id)) { %>
+                  <tr>
+                    <form action="/solve" method="POST">
+                      <th scope="row"> <input class="form-check-input checkbox-unsolved" type="checkbox" name="checkboxSolved" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault" > </th>
+                    </form>
+                    <td> <a href="<%= item.url %>"><%= item.name %></a> </td>
+                    <form action="/unfavourite" method="POST">
+                      <td> <input class="form-check-input checkbox-favourite" name="checkboxFavourite" type="checkbox" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </td>
+                    </form>
+                  </tr>
+                  <% } else {%>
+                    <tr>
+                      <form action="/solve" method="POST">
+                        <th scope="row"> <input class="form-check-input checkbox-unsolved" type="checkbox" name="checkboxSolved" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault" > </th>
+                      </form>
+                      <td> <a href="<%= item.url %>"><%= item.name %></a> </td>
+                      <form action="/favourite" method="POST">
+                        <td> <input class="form-check-input checkbox-unfavourite" name="checkboxFavourite" type="checkbox" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </td>
+                      </form>
+                    </tr>
+                    <% } %>
+                
+                <% } %>
+
+                <% } else if (topicFilters === "all") { %>  <!-- if condition -->
+
+                  <% if (userList.includes(item._id)) { %>
+            
+                    <% if (favList.includes(item._id)) { %>
+                      <tr>
+                        <form action="/unsolve" method="POST">
+                          <th scope="row"> <input class="form-check-input checkbox-solved" type="checkbox" name="checkboxSolved" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </th>
+                        </form>
+                        <td> <a href="<%= item.url %>" style="color: gold;" ><%= item.name %></a> </td>
+                        <form action="/unfavourite" method="POST">
+                          <td> <input class="form-check-input checkbox-favourite" name="checkboxFavourite" type="checkbox" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </td>
+                        </form>
+                      </tr>
+                    <% } else {%>
+                      <tr>
+                        <form action="/unsolve" method="POST">
+                          <th scope="row"> <input class="form-check-input checkbox-solved" type="checkbox" name="checkboxSolved" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </th>
+                        </form>
+                        <td> <a href="<%= item.url %>" style="color: gold;" ><%= item.name %></a> </td>
+                        <form action="/favourite" method="POST">
+                          <td> <input class="form-check-input checkbox-unfavourite" name="checkboxFavourite" type="checkbox" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </td>
+                        </form>
+                      </tr>
+                    <% } %>
+                
+                    <% } else { %>
+                      <% if (favList.includes(item._id)) { %>
+                        <tr>
+                          <form action="/solve" method="POST">
+                            <th scope="row"> <input class="form-check-input checkbox-unsolved" type="checkbox" name="checkboxSolved" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault" > </th>
+                          </form>
+                          <td> <a href="<%= item.url %>"><%= item.name %></a> </td>
+                          <form action="/unfavourite" method="POST">
+                            <td> <input class="form-check-input checkbox-favourite" name="checkboxFavourite" type="checkbox" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </td>
+                          </form>
+                        </tr>
+                        <% } else {%>
+                          <tr>
+                            <form action="/solve" method="POST">
+                              <th scope="row"> <input class="form-check-input checkbox-unsolved" type="checkbox" name="checkboxSolved" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault" > </th>
+                            </form>
+                            <td> <a href="<%= item.url %>"><%= item.name %></a> </td>
+                            <form action="/favourite" method="POST">
+                              <td> <input class="form-check-input checkbox-unfavourite" name="checkboxFavourite" type="checkbox" value="<%=item._id%>" onchange="this.form.submit()" id="flexCheckDefault"> </td>
+                            </form>
+                          </tr>
+                          <% } %>
+                      
+                      <% } %>
+
+                 <% } %>   <!-- end of if-->

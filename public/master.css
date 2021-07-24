@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
 /* navbar */
 
 /* .navbar-container-fluid{
@@ -198,11 +200,10 @@ body {
 }
 
 .mid-content {
-  /* text-align: center; */
   min-height: 40%;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   /* text-align: center; */
   margin-top: 50px;
   margin-bottom: 50px;
@@ -235,6 +236,47 @@ body {
 
 /* lists.ejks styles */
 
+/* rating code starts */
+
+.rate {
+  float: left;
+  height: 46px;
+  padding: 0 10px;
+}
+.rate:not(:checked) > input {
+  position:absolute;
+  top:-9999px;
+}
+.rate:not(:checked) > label {
+  float:right;
+  width:1em;
+  overflow:hidden;
+  white-space:nowrap;
+  cursor:pointer;
+  font-size:30px;
+  color:#ccc;
+}
+.rate:not(:checked) > label:before {
+  content: '★ ';
+}
+.rate > input:checked ~ label {
+  color: #ffc700;    
+}
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+  color: #deb217;  
+}
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+  color: #c59b08;
+}
+
+/* rating code ends */
+
+
 /* .list-items {
   display: block !important;
 } */
@@ -262,7 +304,10 @@ body {
   color: white;
 }
 
+/* ! note this area it can cause flex issues */
+
 .page-heading-container {
+  /* text-align: center; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -315,4 +360,95 @@ body {
   width: 100%;
   margin-top: 3%;
   margin-bottom: 3%;
+}
+
+/* question.ejs styles */
+
+.table-area {
+  margin-top: 20px;
+  max-width: 1000px;
+  /* overflow-x: scroll; */
+}
+
+.table-area table {
+  text-align: center;
+}
+
+table a{
+  font-family: 'Roboto', sans-serif;
+  text-decoration: none;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+table a:hover {
+  color: #B6C9F0;
+}
+
+table .checkbox-solved {
+  background-color: #2a9d8f;
+  border-color: #2a9d8f;
+}
+
+.checkbox-solved:checked {
+  background-color: #e63946;
+  border-color: #e63946;
+}
+
+table .checkbox-favourite {
+  background-color: #FF67E7;
+  border-color: #FF67E7;
+}
+
+.checkbox-favourite:checked {
+  background-color: #ffd6a5;
+  border-color: #ffd6a5;
+}
+
+table .checkbox-unsolved {
+  background-color: #e63946;
+  border-color: #e63946;
+}
+
+.checkbox-unsolved:checked {
+  background-color: #2a9d8f;
+  border-color: #2a9d8f;
+}
+
+table .checkbox-unfavourite {
+  background-color: #ffd6a5;
+  border-color: #ffd6a5;
+}
+
+.checkbox-unfavourite:checked {
+  background-color: #FF67E7;
+  border-color: #FF67E7;
+}
+
+.forms-area-question {
+  text-align: center;
+  margin-top: 2%;
+}
+
+.questions-button button {
+  width: 100%;
+}
+
+.page-subheading-container {
+  display: flex;
+  text-align: center;
+  color: white;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.page-subheading-container .solvedCounter {
+  margin-right: auto;
+  display: inline-block; 
+}
+
+.page-subheading-container .filterResults {
+  text-align-last: right;
+  display: inline-block;
 }

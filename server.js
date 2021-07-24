@@ -48,7 +48,7 @@ const questionSchema = new mongoose.Schema({
     topic: { type : String , required : true },
     name: { type : String , unique : false, required : true },
     url: { type : String , required : true },
-    solved: { type: Boolean, default: false }
+    solved: { type: Boolean, default: false } // we can remove this
 })
 
 const listSchema = new mongoose.Schema({
@@ -57,7 +57,12 @@ const listSchema = new mongoose.Schema({
     questionSet: { type : [questionSchema] , unique : true },
     totalQuestions: Number,
     solvedQuestions: Number
+    // ! we can remove total question and solved question from here
     //TODO: listRating: Number
+})
+
+const topicSchema = new mongoose.Schema({
+    topicName: { type : String , unique : true }
 })
 
 const userSchema = new mongoose.Schema({
@@ -66,8 +71,19 @@ const userSchema = new mongoose.Schema({
     isAdmin: {
         type: Boolean,
         default: false
-    }
-    //TODO: add -> lists: [listSchema]
+    },
+    // TODO: add an object which tracks question solved with list id and question id
+    // ! try using refrence to list id and question id (currently subdocument was making it difficult)
+    // solvedList: [{
+    //     listId: String,
+    //     solvedCountByList: {type: Number, default: 0},
+    //     solvedQuests: [{questionId: String}],
+    //     favouriteQuests: [{questionId: String}]
+    // }],
+    solvedQues: [{type: String}],
+    favQues: [{type: String}]
+    // TODO: try to add a way to show count of solved quetsions by list
+    //TODO: add -> lists: [listSchema] (probably we dont need to add list schema in here)
 })
 
 // adding plugin to userSchema (must be before creating the model and after creating the schema)
@@ -78,6 +94,7 @@ userSchema.plugin(passportLocalMongoose)
 
 const Quest = new mongoose.model("Quest",questionSchema)
 const List = new mongoose.model("List",listSchema)
+const Topic = new mongoose.model("Topic",topicSchema)
 const User = new mongoose.model("User",userSchema)
 
 // passport local config:
@@ -108,8 +125,29 @@ passport.deserializeUser(User.deserializeUser())
 
 // handling get requests
 
+function getUserCount(callback){
+
+    User.countDocuments({},(e,cnt)=>{
+        if(e){
+            console.log(e);
+            callback(e,null)
+        } else {
+            callback(null, cnt);
+        }
+    })
+
+}
+
 app.get("/",(req,res)=>{
-    res.render("front-page")
+
+    getUserCount(function(e,cnt){
+        if(e){
+            console.log(e);
+        } else {
+            res.render("front-page",{totalUsers: cnt})
+        }
+    })
+
 })
 
 app.get("/login",(req,res)=>{
@@ -122,7 +160,49 @@ app.get("/signup",(req,res)=>{
 
 app.get("/lists",(req,res)=>{
     if(req.isAuthenticated()){
-        List.find({},(e,foundLists)=>{res.render("lists",{allLists: foundLists})})
+        List.find({},(e,foundLists)=>{res.render("lists",{allLists: foundLists, userList: req.user.solvedList})})
+    } else {
+        console.log("not authenticated");
+        res.redirect("/login")
+    }
+})
+
+app.get("/lists/:listID/:topics/:showFilter",(req,res)=>{
+    // ! complete this area ASAP
+    let listId = req.params.listID
+    let topic = req.params.topics
+    let passTopic = {}
+    if(topic !== "all")
+    {
+        passTopic = {topicName: topic}
+    }
+    let showFilter = req.params.showFilter
+
+    const filterOptions = ["all", "solved", "unsolved", "favourite" ]
+
+    // console.log(req.params.listID)
+    if(req.isAuthenticated()){
+        List.findById(listId,(e,foundLists)=>{
+            Topic.find({},(e,foundTopics)=>{
+                if(e){
+                    console.log(e);
+                } else {
+                    // ! find any way to get array of questions with similar topic
+                    console.log(foundLists.questionSet);
+                    res.render("questions",{
+                        topicFilters: topic,
+                        showFilters: showFilter,
+                        listId: listId,
+                        listTitleName: foundLists.listName,
+                        allLists: foundLists.questionSet,
+                        allTopics: foundTopics,
+                        options: filterOptions,
+                        userList: req.user.solvedQues,
+                        favList: req.user.favQues
+                    })
+                }
+            })
+        })
     } else {
         console.log("not authenticated");
         res.redirect("/login")
@@ -210,7 +290,6 @@ app.get("/admin-edit-quest",(req,res)=>{
 })
 
 app.get("/admin-edit-quest/:listID",(req,res)=>{
-    
     let listId = req.params.listID
     listId = listId.substring(1)
 
@@ -382,6 +461,19 @@ app.post("/admin-create-quests",(req,res)=>{
         name: req.body.name,
         url: req.body.url,
     })
+
+    Topic.findOneAndUpdate(
+        {topicName: req.body.topic},
+        {topicName: req.body.topic},
+        {upsert: true, new: true, setDefaultsOnInsert: true},
+        (e,result) => {
+            if(e){
+                console.log(e);
+            } else {
+                console.log("topic added");
+            }
+        }
+    )
 
     const addQuestionTo = req.body.list
 
@@ -577,6 +669,91 @@ app.post("/change-password",(req,res)=>{
     },(err)=>{
         console.error(err)
     })
+})
+
+app.post("/solve",(req,res)=>{
+
+    console.log(req.user.id);
+    console.log(req.body.checkboxSolved);
+    
+User.updateOne(
+    { _id: req.user._id }, 
+    { $push: { solvedQues: req.body.checkboxSolved } },
+    // done
+    (e,foundlist)=>{
+        if(!e) {
+            res.redirect("/lists");
+        } else {
+            console.log(e);
+        }
+    }
+);
+})
+
+app.post("/unsolve",(req,res)=>{
+
+    console.log(req.user.id);
+    console.log(req.body.checkboxSolved);
+    
+User.updateOne(
+    { _id: req.user._id }, 
+    { $pull: { solvedQues: req.body.checkboxSolved } },
+    // done
+    (e,foundlist)=>{
+        if(!e) {
+            res.redirect("/lists");
+        } else {
+            console.log(e);
+        }
+    }
+);
+})
+
+app.post("/favourite",(req,res)=>{
+
+    console.log(req.user.id);
+    console.log(req.body.checkboxFavourite);
+    
+User.updateOne(
+    { _id: req.user._id }, 
+    { $push: { favQues: req.body.checkboxFavourite } },
+    // done
+    (e,foundlist)=>{
+        if(!e) {
+            res.redirect("/lists");
+        } else {
+            console.log(e);
+        }
+    }
+);
+})
+
+app.post("/unfavourite",(req,res)=>{
+
+    console.log(req.user.id);
+    console.log(req.body.checkboxFavourite);
+    
+User.updateOne(
+    { _id: req.user._id }, 
+    { $pull: { favQues: req.body.checkboxFavourite } },
+    // done
+    (e,foundlist)=>{
+        if(!e) {
+            res.redirect("/lists");
+        } else {
+            console.log(e);
+        }
+    }
+);
+})
+
+app.post("/lists/:listID/filterList",(req,res)=>{
+    const listId = req.params.listID
+    const topicId = req.body.topicID
+    const optionId = req.body.optionID
+
+    res.redirect("/lists/" + listId + "/" + topicId + "/" + optionId)
+
 })
 
 // log-out:
