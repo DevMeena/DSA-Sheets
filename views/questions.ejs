@@ -44,8 +44,16 @@
   </form>
   </div>
 
+  <% var solved = 0 %> 
+  
+  <% allLists.forEach(quest => { %>
+    <% if (userList.includes(quest._id)) { %>
+      <% solved++ %>   
+    <% } %> 
+  <% }) %>
+
   <div class="page-subheading-container">
-    <h6 class="solvedCounter"> Solved: 0 / 450 </h6>
+    <h6 class="solvedCounter"> Solved: <%= solved %> / <%= allLists.length %>  </h6>
     <h6 class="filterResults" > Topic: <%= topicFilters %> (<%= showFilters %>)</h6> 
   </div>
 
