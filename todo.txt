@@ -6,14 +6,12 @@
 * improve list display currently if all the lists have short about text it only covers 20% of the screen 
 * add alerts on front end whenever something goes wrong
 * remove unwanted comments and console.logs
-* add rating to each list
-* add sorting in list based on number of quetsions and list rating
+* add forums
 * profile icon change
+* add rating to each list
+* add page to manage topics (add ,remove ,edit)
+* add sorting in list based on number of quetsions and list rating
 
 // Asap
-* add forums
-* delete account
 * add list article page
-* add question solved counter
-* add reset progresss (list account)
-* add page to manage topics (add ,remove ,edit)
+* add reset progresss (of perticular list)

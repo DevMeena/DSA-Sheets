@@ -400,6 +400,46 @@ app.get("/change-password",(req,res)=>{
     }
 })
 
+app.get("/reset-user-progress",(req,res)=>{
+    if(req.isAuthenticated()){
+        User.findByIdAndUpdate(req.user._id,{$set: { solvedQues: [], favQues: [] }} ,(err)=>{
+            if (err){
+                console.log(err)
+            }
+            else{
+                console.log("success");
+                res.redirect("/lists")
+            }
+        });
+    } else {
+        console.log("not authenticated")
+        res.redirect("/login")
+    }
+})
+
+app.get("/delete-account",(req,res)=>{
+
+    if(req.isAuthenticated()){
+        if(req.user.isAdmin){
+            console.log("cannot delete admin account");
+            res.redirect("/lists")
+        } else {
+            const ID = req.user._id
+            req.logout()
+            User.findByIdAndDelete(ID,(e)=>{
+                if(e){
+                        console.log(e);
+                } else {
+                        res.redirect("/")
+                }
+            })
+        }
+    } else {
+        console.log("not authenticated")
+        res.redirect("/login")
+    }
+})
+
 // handling post requests
 
 app.post("/login",(req,res)=>{

@@ -22,8 +22,13 @@
             <div class="button-container col-md-4">
               <div class="inner-button-container">
                 <button type="button" onclick="window.location.href = '/lists/<%=item._id%>/all/all'" value="THIS IS THE value" name="startButton" class="btn btn-success">Start solving</button>
-                <button type="button" class="btn btn-primary" disabled> About this list</button>
-                <button type="button" class="btn btn-danger" disabled> Reset progress</button>
+                <button type="button" class="btn btn-primary" disabled>About this list</button>
+                
+                <form action="/reset-list-progress" method="POST">
+                  <input type="text" value="<%= item.questionSet %>" name="list" hidden>
+                  <button type="submit" class="btn btn-danger" disabled>Reset progress</button>
+                </form>
+
               </div>
             </div>  
           </div>
