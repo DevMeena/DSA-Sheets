@@ -11,36 +11,36 @@ Soon i will switch the framework to ReactJS and improve some other aspects of th
 
 **front page**
 
-![mockup img](mockup/frontpage.png)
+## ![mockup img](mockup/frontpage.png)
 
 **login/signup page**
 
-![mockup img](mockup/login.png)
+## ![mockup img](mockup/login.png)
 
 **lists page**
 
-![mockup img](mockup/alllists.png)
+## ![mockup img](mockup/alllists.png)
 
 **quests page**
 
-![mockup img](mockup/quests.png)
+## ![mockup img](mockup/quests.png)
 
 **applying filter on questions**
 
-![mockup img](mockup/sorting.png)
+## ![mockup img](mockup/sorting.png)
 
 **admin page**
 
-![mockup img](mockup/admin.png)
+## ![mockup img](mockup/admin.png)
 
 **add new question page**
 
-![mockup img](mockup/addquest.png)
+## ![mockup img](mockup/addquest.png)
 
 **add new list page**
 
-![mockup img](mockup/addlist.png)
+## ![mockup img](mockup/addlist.png)
 
 **change password page**
 
-![mockup img](mockup/changepwd.png)
+## ![mockup img](mockup/changepwd.png)
