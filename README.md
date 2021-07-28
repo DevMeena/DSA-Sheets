@@ -1,13 +1,13 @@
 # DSA SHEETS
 
-## Ace your coding interviews with ease
+## About this project
 
 ### This is a personal project inspired by DS Cheatsheets and Ladders
 
 I started this project after i finished learning basic web development. As the project grew it became more and more complicated for me and i learnt newer and better technologies like ReactJS which will greatly improve this project. Some sections of this project is poorly coded so have finished this project for now.
 Soon i will switch the framework to ReactJS and improve some other aspects of this project too. So this project is closed for now and I'll continue it in ReactJS.
 
-### DS Sheets Mockup
+### DSA Sheets Mockup
 
 **front page**
 
