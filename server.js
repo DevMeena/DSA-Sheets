@@ -37,7 +37,7 @@ app.use(passport.session())
 
 // linking database
 
-mongoose.connect('mongodb://localhost:27017/dsaDB', {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect('mongodb+srv://admin-Dev:2019ucp1414@dsadb.2ssa4.mongodb.net/dsa_DB?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true})
 mongoose.set("useCreateIndex", true) // ! avoids deprication warning (it was causing issues earlier if any issue found please disable it)
 
 // creating a mongoose schemas
