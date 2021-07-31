@@ -1,0 +1,18 @@
+<%- include('partials/header') %> 
+
+<div class="forms-area">
+  <div class="form-group form-fields"> <h1>Report a Bug</h1> </div>
+  <form action="/forums" method="POST">
+      <div class="form-group form-fields">
+        <input type="text" class="form-control" name="bugName" id="exampleFormControlInput1" required placeholder="Enter the Title">
+      </div>
+      <div class="form-group form-fields">
+        <textarea class="form-control" id="exampleFormControlTextarea1" name="bugDescription" required placeholder="Enter the details about the Bug" rows="5"></textarea>
+      </div>
+      <div class="form-fields">
+        <button type="submit" class="btn btn-danger mb-2">Report</button>
+      </div>
+    </form>
+</div>
+
+<%- include('partials/footer') %> 

@@ -452,3 +452,21 @@ table .checkbox-unfavourite {
   text-align-last: right;
   display: inline-block;
 }
+
+.bug-card{
+  background-color: transparent;
+  border: 2px solid goldenrod;
+  color: white;
+  max-width: 600px;
+  margin: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.bugName{
+  color: gold;
+}
+
+.resolve-btn{
+  width: 150px;
+}

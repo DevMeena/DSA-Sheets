@@ -1,0 +1,35 @@
+<%- include('partials/header') %> 
+<div>
+<% bugs.forEach(bug=>{  %> 
+
+    
+    <!-- <div>
+        
+    </div>
+    <div>
+        
+    </div>
+    <div>
+        <h1>   </h1>
+    </div> -->
+
+    <div class="card bug-card">
+        <div class="card-header reportedBy">
+            <%= bug.reportedBy %>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title bugName"> <%= bug.bugName %> </h5>
+          <p class="card-text"> <%= bug.bugDescription %> </p>
+          <form action="/resolve" method="POST">
+            <input name="bugId" value="<%= bug._id %>" hidden>
+            <button type="submit" class="btn btn-success resolve-btn"> Resolve </button>
+          </form>
+        </div>
+      </div>
+
+
+<% }) %> 
+
+</div>
+
+<%- include('partials/footer') %> 

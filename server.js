@@ -86,6 +86,12 @@ const userSchema = new mongoose.Schema({
     //TODO: add -> lists: [listSchema] (probably we dont need to add list schema in here)
 })
 
+const bugsSchema = new mongoose.Schema({
+        bugName: String,
+        bugDescription: String,
+        reportedBy: String
+})
+
 // adding plugin to userSchema (must be before creating the model and after creating the schema)
 
 userSchema.plugin(passportLocalMongoose)
@@ -96,6 +102,7 @@ const Quest = new mongoose.model("Quest",questionSchema)
 const List = new mongoose.model("List",listSchema)
 const Topic = new mongoose.model("Topic",topicSchema)
 const User = new mongoose.model("User",userSchema)
+const Bug = new mongoose.model("Bugs",bugsSchema)
 
 // passport local config:
 
@@ -433,6 +440,26 @@ app.get("/delete-account",(req,res)=>{
                         res.redirect("/")
                 }
             })
+        }
+    } else {
+        console.log("not authenticated")
+        res.redirect("/login")
+    }
+})
+
+app.get("/forums",(req,res)=>{
+
+    if(req.isAuthenticated()){
+        if(req.user.isAdmin){
+            Bug.find({},(e,found)=>{
+                if(e){
+                    console.log(e);
+                } else {
+                    res.render("admin-forums",{bugs: found})
+                }
+            })
+        } else {
+            res.render("forums")
         }
     } else {
         console.log("not authenticated")
@@ -794,6 +821,33 @@ app.post("/lists/:listID/filterList",(req,res)=>{
 
     res.redirect("/lists/" + listId + "/" + topicId + "/" + optionId)
 
+})
+
+app.post("/forums",(req,res)=>{
+    const bug = new Bug({
+        bugName: req.body.bugName,
+        bugDescription: req.body.bugDescription,
+        reportedBy: req.user.username
+    })
+
+    bug.save((e)=>{
+        if(e){
+            console.log(e);
+        } else {
+            res.redirect("/lists")
+        }
+    })
+})
+
+app.post("/resolve",(req,res)=>{
+    const bugId = req.body.bugId
+    Bug.findByIdAndDelete(bugId,(e)=>{
+        if(e){
+            console.log(e);
+        } else {
+            res.redirect("/forums")
+        }
+    })
 })
 
 // log-out:
