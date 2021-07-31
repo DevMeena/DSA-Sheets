@@ -840,7 +840,9 @@ app.post("/forums",(req,res)=>{
 })
 
 app.post("/resolve",(req,res)=>{
+
     const bugId = req.body.bugId
+    
     Bug.findByIdAndDelete(bugId,(e)=>{
         if(e){
             console.log(e);
