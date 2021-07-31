@@ -24,7 +24,8 @@ app.use(bodyParser.urlencoded({extended: true}))
 // express session code (must be here before linking database):
 
 app.use(session({
-    secret: process.env.SECRET,
+    // secret: process.env.SECRET,
+    secret: "adminisleader9669xd", // ! remove it from git remote repo
     resave: false,
     saveUninitialized: true,
     // cookie: { secure: true }
@@ -118,7 +119,8 @@ passport.deserializeUser(User.deserializeUser())
  User.countDocuments({},(e,c)=>{
     if(!e){
         if(!c){
-            User.register({username: process.env.ADMIN_USERNAME, isAdmin: true},process.env.ADMIN_PASSWORD, (e,user)=>{
+            // User.register({username: process.env.ADMIN_USERNAME, isAdmin: true},process.env.ADMIN_PASSWORD, (e,user)=>{
+            User.register({username: "d", isAdmin: true},"d", (e,user)=>{ // ! remove it from git remote repo
                 if(e){
                     console.log(e);
                     res.redirect("/signup")
@@ -861,7 +863,7 @@ app.get("/logout",(req,res)=>{
 
 // server management
 
-let port = process.env.PORT
+var port = process.env.PORT
 
 if(port === null || port === ""){
     port = 3000
@@ -871,3 +873,4 @@ app.listen(port,()=>{
     console.log("server up and running at port " + port)
 })
 
+// https://boiling-dusk-29892.herokuapp.com/
